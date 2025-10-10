@@ -13,7 +13,7 @@ public class bulletBehaviorScript : MonoBehaviour
 
     private void Awake()
     {
-        rb.linearVelocity = Vector2.up * 10;
+        rb.linearVelocity = transform.up * 10;
     }
 
     // Update is called once per frame
