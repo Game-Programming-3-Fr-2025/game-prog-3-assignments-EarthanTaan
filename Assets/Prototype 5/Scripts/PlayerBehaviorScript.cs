@@ -10,6 +10,8 @@ public class PlayerBehaviorScript : MonoBehaviour
     public float drag;
     public float dampStrength;
     public GameObject bullet;
+    private Vector3 FindMyKeys;
+    private Vector3 TargetPos;
 
     public Camera Camera;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -17,6 +19,8 @@ public class PlayerBehaviorScript : MonoBehaviour
     {
         drag = 0.5f;
         dampStrength = 5;
+        FindMyKeys = Camera.WorldToViewportPoint(transform.position);
+        TargetPos = transform.position;
     }
 
     // Update is called once per frame
@@ -27,25 +31,28 @@ public class PlayerBehaviorScript : MonoBehaviour
 
         // Screen-wrap
         // First, attach a FindMyKeys to the player's ship (in the form of a translation from the transform's world-position to a viewport-point).
+        
         // Then, track the FindMyKeys variable to note when it exits the screen's bounds ( > 1 or < 0 ).
+        if (FindMyKeys.x >= 1)
+        {
+            TargetPos = Camera.ViewportToWorldPoint(new Vector3(0, FindMyKeys.y));
+        }
+        if (FindMyKeys.y >= 1)
+        {
+            TargetPos = Camera.ViewportToWorldPoint(new Vector3(FindMyKeys.x, 0));
+        }
+        if (FindMyKeys.x <= 0)
+        {
+            TargetPos = Camera.ViewportToWorldPoint(new Vector3(1, FindMyKeys.y));
+        }
+        if (FindMyKeys.y <= 0)
+        {
+            TargetPos = Camera.ViewportToWorldPoint(new Vector3(FindMyKeys.x, 1));
+        }
         // Update a target-position variable with the screen-wrapped coordinates.
         // Finally, always be assigning the ship's position from the target-position variable.
-        if (Camera.WorldToViewportPoint(transform.position).x > 1 )
-        {
-            transform.position = Camera.ViewportToWorldPoint(new Vector3(0,0));
-        }
-        if (transform.position.x < -Screen.width * 0.5f)
-        {
-            transform.position.Set(Screen.width * 0.5f, transform.position.y, 0);
-        }
-        if (transform.position.y > Screen.height * 0.5f)
-        {
-            transform.position.Set(transform.position.x, -Screen.height * 0.5f, 0);
-        }
-        if (transform.position.y < -Screen.height * 0.5f)
-        {
-            transform.position.Set(transform.position.x, Screen.height * 0.5f, 0);
-        }
+        transform.position = Camera.ViewportToWorldPoint(TargetPos);
+        
         
         // T is for "Test"
         if (Input.GetKeyDown(KeyCode.T))
