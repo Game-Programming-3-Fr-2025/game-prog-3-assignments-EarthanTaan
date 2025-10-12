@@ -306,7 +306,7 @@ MonoBehaviour:
   drag: 0.5
   dampStrength: 5
   bullet: {fileID: 4027708080004777926, guid: 67df15e9aaa341a4e9266ef069fee221, type: 3}
-  Camera: {fileID: 0}
+  Camera: {fileID: 779776183}
 --- !u!60 &606134594
 PolygonCollider2D:
   m_ObjectHideFlags: 0

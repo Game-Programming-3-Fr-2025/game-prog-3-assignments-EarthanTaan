@@ -7,8 +7,8 @@ public class PlayerBehaviorScript : MonoBehaviour
 {
     public GameObject firingNode;
     public Rigidbody2D PlayerRB;
-    public float drag;
-    public float dampStrength;
+    public float drag = 0.5f;
+    public float dampStrength = 5;
     public GameObject bullet;
     private Vector3 FindMyKeys;
     private Vector3 TargetPos;
@@ -17,41 +17,39 @@ public class PlayerBehaviorScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        drag = 0.5f;
-        dampStrength = 5;
-        FindMyKeys = Camera.WorldToViewportPoint(transform.position);
+        FindMyKeys = Camera.WorldToScreenPoint(transform.position);
         TargetPos = transform.position;
+        PlayerRB.angularDamping = dampStrength;
+        PlayerRB.linearDamping = drag;
     }
 
     // Update is called once per frame
     void FixedUpdate()
     {
-        PlayerRB.angularDamping = dampStrength;
-        PlayerRB.linearDamping = drag;
-
+        
         // Screen-wrap
         // First, attach a FindMyKeys to the player's ship (in the form of a translation from the transform's world-position to a viewport-point).
         
         // Then, track the FindMyKeys variable to note when it exits the screen's bounds ( > 1 or < 0 ).
         if (FindMyKeys.x >= 1)
         {
-            TargetPos = Camera.ViewportToWorldPoint(new Vector3(0, FindMyKeys.y));
+            TargetPos = Camera.ScreenToWorldPoint(new Vector3(0, FindMyKeys.y));
         }
         if (FindMyKeys.y >= 1)
         {
-            TargetPos = Camera.ViewportToWorldPoint(new Vector3(FindMyKeys.x, 0));
+            TargetPos = Camera.ScreenToWorldPoint(new Vector3(FindMyKeys.x, 0));
         }
         if (FindMyKeys.x <= 0)
         {
-            TargetPos = Camera.ViewportToWorldPoint(new Vector3(1, FindMyKeys.y));
+            TargetPos = Camera.ScreenToWorldPoint(new Vector3(1, FindMyKeys.y));
         }
         if (FindMyKeys.y <= 0)
         {
-            TargetPos = Camera.ViewportToWorldPoint(new Vector3(FindMyKeys.x, 1));
+            TargetPos = Camera.ScreenToWorldPoint(new Vector3(FindMyKeys.x, 1));
         }
         // Update a target-position variable with the screen-wrapped coordinates.
         // Finally, always be assigning the ship's position from the target-position variable.
-        transform.position = Camera.ViewportToWorldPoint(TargetPos);
+        transform.position = Camera.ScreenToWorldPoint(TargetPos);
         
         
         // T is for "Test"
